@@ -1,0 +1,55 @@
+.shopify-policy__container {
+    max-width: 1420px !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 60px;
+    text-align: justify;
+}                                        
+.template-page #MainContent {
+    padding-bottom: 0 !important;
+  
+}
+
+.m-header header { box-shadow: 0 4px 20px #0000000a; }
+
+
+
+----------------- blog er jnno -----------------------
+
+
+a.m-article-card__readmore.m-button.m-button--link {
+    background-color: #a58655 !important;
+    color: white !important;
+    padding: 8px 18px !important;
+    border: 1px solid #a58655 !important;
+    box-sizing: border-box;
+}
+
+a.m-article-card__readmore.m-button.m-button--link:hover {
+    background-color: transparent !important;
+    color: #a58655 !important;
+    border: 1px solid #a58655 !important;
+}
+
+.m-article-card.m-article-card--view-grid.m-scroll-trigger.animate--fade-in-up {
+    border: 1px solid #d6d4d4;
+}
+.m-article-card__content.m\:text-left {
+    padding: 15px !important;
+}
+
+.m-article-card.m-article-card--view-grid.m-scroll-trigger.animate--fade-in-up {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.m-article-card__content.m\:text-left {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+a.m-article-card__readmore.m-button.m-button--link {
+    margin-top: auto;
+}
