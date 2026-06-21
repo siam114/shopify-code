@@ -1,0 +1,96 @@
+﻿Announcement bar
+
+
+
+
+
+
+<div class="custom-marquee-announcement">
+  <a href="/collections/all" class="custom-marquee-announcement__link">
+    <div class="custom-marquee-announcement__track">
+      <span>✦ Free Shipping on Orders Over $100</span>
+      <span>✦ New Arrivals Available Now</span>
+      <span>✦ Use Code WELCOME10 for 10% Off</span>
+      <span>✦ Shop Now Before Stock Runs Out</span>
+
+
+      <span>✦ Free Shipping on Orders Over $100</span>
+      <span>✦ New Arrivals Available Now</span>
+      <span>✦ Use Code WELCOME10 for 10% Off</span>
+      <span>✦ Shop Now Before Stock Runs Out</span>
+    </div>
+  </a>
+</div>
+
+
+<style>
+  .custom-marquee-announcement {
+    width: 100%;
+    overflow: hidden;
+    background: #111111;
+    color: #ffffff;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    white-space: nowrap;
+  }
+
+
+  .custom-marquee-announcement__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+  }
+
+
+  .custom-marquee-announcement__track {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    animation: customMarqueeMove 22s linear infinite;
+  }
+
+
+  .custom-marquee-announcement__track span {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 50px;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+
+
+  .custom-marquee-announcement:hover .custom-marquee-announcement__track {
+    animation-play-state: paused;
+  }
+
+
+  @keyframes customMarqueeMove {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+
+  @media screen and (max-width: 749px) {
+    .custom-marquee-announcement {
+      height: 38px;
+    }
+
+
+    .custom-marquee-announcement__track span {
+      font-size: 13px;
+      margin-right: 35px;
+    }
+  }
+.custom-marquee-announcement{
+border-top:
+#1C1C1C;}
+</style>
