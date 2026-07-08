@@ -1,0 +1,394 @@
+{%- style -%}
+  #section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+
+  .editorial-container-{{ section.id }} {
+    max-width: {{ section.settings.container_width }}px !important;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  .editorial-banner-wrapper {
+    position: relative;
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+    height: {{ section.settings.desktop_height }}vh;
+    display: flex;
+    align-items: center;
+  }
+
+
+  .editorial-banner-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+
+  .editorial-banner-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+
+  .editorial-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+    z-index: 2;
+  }
+
+
+  .editorial-content {
+    position: relative;
+    z-index: 3;
+    padding: 60px;
+    max-width: 650px;
+    color: #ffffff;
+  }
+
+
+  .editorial-subtitle {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: {{ section.settings.accent_color }};
+    margin-bottom: 20px;
+    font-size: {{ section.settings.subtitle_size }}px;
+  }
+
+
+  .editorial-title {
+    line-height: 1.1;
+    margin: 0 0 25px 0;
+    color: {{ section.settings.title_color }};
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: {{ section.settings.title_weight }}; /* কাস্টমাইজযোগ্য ফন্ট ওয়েট */
+  }
+
+
+  .editorial-title span {
+    font-style: italic;
+  }
+
+
+  .editorial-text {
+    line-height: 1.6;
+    margin-bottom: 35px;
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.text_size }}px;
+  }
+
+
+  .editorial-btn {
+    display: inline-block;
+    padding: 10px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid {{ section.settings.btn_border_color }};
+    background-color: {{ section.settings.btn_bg_color }};
+    color: {{ section.settings.btn_text_color }};
+    width: fit-content;
+  }
+
+
+  .editorial-btn:hover {
+    background-color: {{ section.settings.btn_bg_hover }};
+    color: {{ section.settings.btn_text_hover }};
+    border-color: {{ section.settings.btn_bg_hover }};
+  }
+
+
+  @media (max-width: 768px) {
+    .editorial-container-{{ section.id }} { padding: 0; }
+    .editorial-banner-wrapper { height: 70vh; border-radius: 0; }
+    .editorial-content {
+      padding: 40px 20px;
+      text-align: center;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .editorial-title { font-size: {{ section.settings.title_size_mobile }}px; }
+    .editorial-text { font-size: {{ section.settings.text_size_mobile }}px; }
+    .editorial-btn {
+        padding: 10px 28px;
+        font-size: 13px;
+        width: auto;
+    }
+  }
+{%- endstyle -%}
+
+
+<section id="section-{{ section.id }}">
+  <div class="editorial-container-{{ section.id }}">
+    <div class="editorial-banner-wrapper">
+      <div class="editorial-banner-image">
+        {% if section.settings.image != blank %}
+          <img src="{{ section.settings.image | img_url: '2000x' }}" alt="{{ section.settings.title }}">
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+      </div>
+      <div class="editorial-overlay"></div>
+      <div class="editorial-content">
+        {% if section.settings.subtitle != blank %}
+          <span class="editorial-subtitle">{{ section.settings.subtitle }}</span>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="editorial-title">{{ section.settings.title }}</h2>
+        {% endif %}
+        {% if section.settings.text != blank %}
+          <div class="editorial-text">{{ section.settings.text }}</div>
+        {% endif %}
+        {% if section.settings.button_label != blank %}
+          <a href="{{ section.settings.button_link }}" class="editorial-btn">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Editorial Banner Story",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Banner Image"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 10,
+      "unit": "px",
+      "label": "Section Width",
+      "default": 1420
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Desktop Height",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Corner Radius",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Typography Settings"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Our Story"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Font Size",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Subtitle Color",
+      "default": "#e0d3c1"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Heading",
+      "default": "Beautifully made. <span>Mindfully chosen.</span>"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "bold", "label": "Bold" }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size (Desktop)",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size (Mobile)",
+      "default": 36
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Description",
+      "default": "<p>Every piece in our collection is hand-selected from independent makers and small studios. We believe in slow beauty — the kind that lasts.</p>"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Description Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 14,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size (Desktop)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button Customization"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Read our story"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button Background",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_border_color",
+      "label": "Button Border Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_hover",
+      "label": "Button Hover Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_hover",
+      "label": "Button Hover Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section BG Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Banner Story"
+    }
+  ]
+}
+{% endschema %}
