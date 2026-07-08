@@ -1,0 +1,306 @@
+custom shipping block
+            
+
+
+ {% comment %} custom shipping section  {% endcomment %}
+
+
+            {% when 'order-processing-details' %}
+        <div class="order-processing-section">
+          <div class="order-container">
+
+
+            <div class="order-step">
+              <div class="icon-wrapper">
+                {% if block.settings.ordered_image != blank %}
+                  <img src="{{ block.settings.ordered_image | img_url: 'master' }}" alt="{{ block.settings.ordered-title }}">
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag }}
+                {% endif %}
+              </div>
+              <div class="text-content">
+                <h4 class="step-title">{{ block.settings.ordered-title }}</h4>
+                <div class="step-desc">{{ block.settings['ordered-description'] }}</div>
+              </div>
+            </div>
+
+
+            <div class="step-line">
+              <div class="running-line"></div>
+            </div>
+
+
+            <div class="order-step">
+              <div class="icon-wrapper">
+                {% if block.settings.shipped_image != blank %}
+                  <img src="{{ block.settings.shipped_image | img_url: 'master' }}" alt="{{ block.settings['shipped-title'] }}">
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag }}
+                {% endif %}
+              </div>
+              <div class="text-content">
+                <h4 class="step-title">{{ block.settings['shipped-title'] }}</h4>
+                <div class="step-desc">{{ block.settings['shipped-description'] }}</div>
+              </div>
+            </div>
+
+
+            <div class="step-line">
+              <div class="running-line"></div>
+            </div>
+
+
+            <div class="order-step">
+              <div class="icon-wrapper">
+                {% if block.settings.arrival_image != blank %}
+                  <img src="{{ block.settings.arrival_image | img_url: 'master' }}" alt="{{ block.settings['arrival-title'] }}">
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag }}
+                {% endif %}
+              </div>
+              <div class="text-content">
+                <h4 class="step-title">{{ block.settings['arrival-title'] }}</h4>
+                <div class="step-desc">{{ block.settings['arrival-description'] }}</div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+
+        <style>
+          .order-processing-section {
+            padding: 24px 16px;
+            max-width: 500px;
+     
+          }
+
+
+          .order-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            text-align: center;
+          }
+
+
+          .order-step {
+
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+
+          /* Icon circle — smaller & cleaner */
+          .icon-wrapper {
+            width: 60px;
+            height: 60px;
+            background-color: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+          }
+
+
+          .icon-wrapper img {
+            width: 30px;
+            height:30px;
+            object-fit: contain;
+          }
+
+
+          .icon-wrapper svg {
+            width: 28px;
+            height: 28px;
+          }
+
+
+          /* Connector line */
+          .step-line {
+            flex: 1;
+            height: 2px;
+            margin-top: 32px; /* vertically centers with icon */
+            position: relative;
+            background-color: #e0e0e0;
+            overflow: hidden;
+            border-radius: 2px;
+          }
+
+
+          /* Animated running highlight */
+          .running-line {
+            position: absolute;
+            top: 0;
+            left: -70%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(
+              90deg,
+              transparent 0%,
+              #111 35%,
+              #111 65%,
+              transparent 100%
+            );
+            animation: runLine 1.8s linear infinite !important;
+          }
+
+
+          @keyframes runLine {
+            0%   { left: -70%; }
+            100% { left: 110%; }
+          }
+
+
+          /* Text */
+          .step-title {
+            margin: 0 0 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #111;
+          }
+
+
+          .step-desc,
+          .step-desc p {
+            margin: 0;
+            font-size: 11px;
+            color: #888;
+            line-height: 1.5;
+          }
+
+
+          /* ── Mobile: keep row layout, shrink everything neatly ── */
+          @media screen and (max-width: 600px) {
+            .order-processing-section {
+              padding: 28px 10px;
+            }
+
+
+            .order-container {
+              flex-direction: row;
+              align-items: flex-start;
+              justify-content: space-between;
+            }
+
+
+            .icon-wrapper {
+              width: 56px;
+              height: 56px;
+            }
+
+
+            .icon-wrapper img {
+              width: 28px;
+              height: 28px;
+            }
+
+
+            .icon-wrapper svg {
+              width: 18px;
+              height: 18px;
+            }
+
+
+            .step-line {
+              flex: 1;
+              margin-top: 30px;
+            }
+
+
+            .step-title {
+              font-size: 9px;
+              letter-spacing: 0.05em;
+            }
+
+
+            .step-desc,
+            .step-desc p {
+              font-size: 9px;
+            }
+          }
+        </style>
+
+
+
+
+Schema
+
+
+
+
+{
+      "type": "order-processing-details",
+      "name": "Order Processing Details",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Ordered Details"
+        },
+        {
+          "type": "image_picker",
+          "id": "ordered_image",
+          "label": "Select Ordered Image"
+        },
+        {
+          "type": "text",
+          "id": "ordered-title",
+          "label": "Order Title"
+        },
+        {
+          "type": "richtext",
+          "id": "ordered-description",
+          "label": "Order Description"
+        },
+        {
+          "type": "header",
+          "content": "Shipped Details"
+        },
+        {
+          "type": "image_picker",
+          "id": "shipped_image",
+          "label": "Select Shipped Image"
+        },
+        {
+          "type": "text",
+          "id": "shipped-title",
+          "label": "Shipped Title"
+        },
+        {
+          "type": "richtext",
+          "id": "shipped-description",
+          "label": "Shipped Description"
+        },
+        {
+          "type": "header",
+          "content": "Arrival Details"
+        },
+        {
+          "type": "image_picker",
+          "id": "arrival_image",
+          "label": "Select Arrival Image"
+        },
+        {
+          "type": "text",
+          "id": "arrival-title",
+          "label": "Arrival Title"
+        },
+        {
+          "type": "richtext",
+          "id": "arrival-description",
+          "label": "Arrival Description"
+        }
+      ]
+    },
+
+
+
