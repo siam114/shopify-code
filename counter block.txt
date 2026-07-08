@@ -1,0 +1,120 @@
+Custom counter block 
+
+
+
+ {% comment %} custom countdown {% endcomment %}
+
+
+{% when 'countdown_time' %}
+ <div class="offer-countdown" data-countdown-block {{ block.shopify_attributes }}>
+<span class="offer-countdown__label">
+ {{- block.settings.label_text | default: 'FREE GIFT ENDS IN' -}}
+ </span>
+ <span class="offer-countdown__time" data-countdown-target="{{ block.settings.countdown_time }}">00:00:00:00</span >
+<span class="offer-countdown__dot" aria-hidden="true"></span>
+</div>
+
+
+<style>
+  .offer-countdown {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f7dede;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: .2px;
+  }
+
+
+  .offer-countdown__label { color: #9f1111; }
+  .offer-countdown__time { color: #cc2020; font-variant-numeric: tabular-nums; }
+  .offer-countdown__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #f35f5f;
+  }
+</style>
+
+
+<script>
+  (function () {
+    function formatTime(ms) {
+      var total = Math.max(0, Math.floor(ms / 1000));
+
+
+      var days = Math.floor(total / 86400);
+      var hours = Math.floor((total % 86400) / 3600);
+      var minutes = Math.floor((total % 3600) / 60);
+      var seconds = total % 60;
+
+
+      return (
+        days +
+        'd ' +
+        String(hours).padStart(2, '0') +
+        'h ' +
+        String(minutes).padStart(2, '0') +
+        'm ' +
+        String(seconds).padStart(2, '0') +
+        's'
+      );
+    }
+
+
+    function startCountdown(el, targetValue) {
+      if (!targetValue) return;
+      var target = new Date(targetValue).getTime();
+      if (Number.isNaN(target)) return;
+
+
+      function tick() {
+        var diff = target - Date.now();
+        el.textContent = formatTime(diff);
+      }
+
+
+      tick();
+      var timer = setInterval(function () {
+        var diff = target - Date.now();
+        el.textContent = formatTime(diff);
+        if (diff <= 0) clearInterval(timer);
+      }, 1000);
+    }
+
+
+    document.querySelectorAll('[data-countdown-target]').forEach(function (node) {
+      startCountdown(node, node.getAttribute('data-countdown-target'));
+    });
+  })();
+</script>
+
+
+
+Schema 
+
+
+{
+      "type": "countdown_time",
+      "name": "Countdown",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label_text",
+          "label": "Label text",
+          "default": "FREE GIFT ENDS IN"
+        },
+        {
+          "type": "text",
+          "id": "countdown_time",
+          "label": "Countdown Time",
+          "info": "Use format: 2026-12-31T23:59:59"
+        }
+      ]
+    },
+
