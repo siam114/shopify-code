@@ -1,0 +1,285 @@
+Image and text custom section
+
+
+
+
+
+
+{% style %}
+  .section-wrap-{{ section.id }} {
+    width: 100%;
+    background: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+  }
+
+
+  .container-{{ section.id }} {
+    max-width: {{ section.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+
+  .section-2b-{{ section.id }} {
+    display: flex;
+    width: 100%;
+    min-height: 600px;
+    gap: {{ section.settings.column_gap }}px;
+  }
+
+
+  /* LEFT PANEL */
+  .left-panel-{{ section.id }} {
+    flex: 0 0 {{ section.settings.left_column_width }}%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .left-panel-{{ section.id }} img,
+  .left-panel-{{ section.id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+
+  /* RIGHT PANEL */
+  .right-panel-{{ section.id }} {
+    flex: 1;
+    padding: 40px 0;
+  }
+
+
+  .eyebrow-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: {{ section.settings.space_below_eyebrow }}px;
+  }
+  .eyebrow-{{ section.id }} .rule {
+    width: 32px;
+    height: 1px;
+    background: {{ section.settings.gold_color }};
+  }
+  .eyebrow-{{ section.id }} span {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: {{ section.settings.gold_color }};
+    font-family: 'Jost', sans-serif;
+  }
+
+
+  /* HEADING STYLING */
+  .right-panel-{{ section.id }} .heading-wrapper h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: {{ section.settings.heading_size }}px;
+    line-height: 1.08;
+    color: {{ section.settings.text_dark }};
+    margin-bottom: {{ section.settings.space_below_heading }}px;
+    margin-top: 0;
+  }
+  .right-panel-{{ section.id }} .heading-wrapper h2 em {
+    color: {{ section.settings.gold_color }};
+    font-style: italic;
+  }
+
+
+  .lead-{{ section.id }}, .body2-{{ section.id }} {
+    font-family: 'Jost', sans-serif;
+    font-size: 16px;
+    line-height: 1.9;
+    color: {{ section.settings.text_mid }};
+    max-width: 520px;
+    margin-bottom: 25px;
+  }
+
+
+  .pull-quote-{{ section.id }} {
+    border-left: 2px solid {{ section.settings.divider_color }};
+    padding-left: 22px;
+    margin-bottom: 25px;
+    max-width: 520px;
+  }
+  .pull-quote-{{ section.id }} p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: {{ section.settings.quote_text_color }};
+    margin: 0;
+  }
+
+
+  /* STATS */
+  .aiva-stats-{{ section.id }} {
+    margin-top: {{ section.settings.space_above_stats }}px;
+    padding-top: 34px;
+    border-top: 1px solid {{ section.settings.divider_color }};
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+
+  .aiva-stat-{{ section.id }} {
+    padding-right: 15px;
+  }
+  .aiva-stat-{{ section.id }} + .aiva-stat-{{ section.id }} {
+    border-left: 1px solid {{ section.settings.divider_color }};
+    padding-left: 25px;
+  }
+
+
+  .aiva-num-{{ section.id }} {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: {{ section.settings.gold_color }};
+    margin-bottom: 8px;
+  }
+  .aiva-label-{{ section.id }} {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: {{ section.settings.quote_text_color }};
+    line-height: 1.5;
+  }
+
+
+  /* RESPONSIVE */
+  @media (max-width: 989px) {
+    .section-2b-{{ section.id }} { flex-direction: column; }
+    .left-panel-{{ section.id }} { flex: 0 0 100%; height: 450px; }
+    .aiva-stats-{{ section.id }} { grid-template-columns: repeat(2, 1fr); row-gap: 30px; }
+    .right-panel-{{ section.id }} .heading-wrapper h2 { font-size: clamp(32px, 8vw, 48px); }
+  }
+  @media (max-width: 640px) {
+    .aiva-stats-{{ section.id }} { grid-template-columns: 1fr; }
+    .aiva-stat-{{ section.id }} + .aiva-stat-{{ section.id }} { border-left: none; border-top: 1px solid {{ section.settings.divider_color }}; padding: 20px 0 0 0; }
+  }
+{% endstyle %}
+
+
+<div class="section-wrap-{{ section.id }}">
+  <div class="container-{{ section.id }}">
+    <section class="section-2b-{{ section.id }}">
+     
+      <div class="left-panel-{{ section.id }}">
+        {% if section.settings.image != blank %}
+          {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+      </div>
+
+
+      <div class="right-panel-{{ section.id }}">
+        <div class="eyebrow-{{ section.id }}">
+          <div class="rule"></div>
+          <span>{{ section.settings.eyebrow }}</span>
+        </div>
+
+
+        <div class="heading-wrapper">
+          {{ section.settings.heading }}
+        </div>
+
+
+        <div class="lead-{{ section.id }}">
+          {{ section.settings.lead_text }}
+        </div>
+
+
+        {% if section.settings.quote != blank %}
+          <div class="pull-quote-{{ section.id }}">
+            <p>{{ section.settings.quote }}</p>
+          </div>
+        {% endif %}
+
+
+        <div class="body2-{{ section.id }}">
+          {{ section.settings.body_text }}
+        </div>
+
+
+        <div class="aiva-stats-{{ section.id }}">
+          {% for block in section.blocks %}
+            <div class="aiva-stat-{{ section.id }}" {{ block.shopify_attributes }}>
+              <div class="aiva-num-{{ section.id }}">{{ block.settings.stat_num }}</div>
+              <div class="aiva-label-{{ section.id }}">
+                {{ block.settings.stat_label | newline_to_br }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+
+    </section>
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Aiva Stats Section",
+  "settings": [
+    { "type": "header", "content": "Layout Settings" },
+    { "type": "range", "id": "container_width", "label": "Section Max Width", "min": 1000, "max": 1600, "step": 20, "default": 1200, "unit": "px" },
+    { "type": "range", "id": "padding_top", "label": "Padding Top", "min": 0, "max": 150, "step": 5, "default": 80, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Padding Bottom", "min": 0, "max": 150, "step": 5, "default": 80, "unit": "px" },
+    { "type": "range", "id": "left_column_width", "label": "Image Column Width", "min": 30, "max": 60, "step": 1, "default": 42, "unit": "%" },
+    { "type": "range", "id": "column_gap", "label": "Gap Between Columns", "min": 0, "max": 100, "step": 5, "default": 60, "unit": "px" },
+   
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background Color", "default": "#EFE6DC" },
+    { "type": "color", "id": "gold_color", "label": "Accent Color (Gold)", "default": "#A07848" },
+    { "type": "color", "id": "text_dark", "label": "Heading Color", "default": "#2E2218" },
+    { "type": "color", "id": "text_mid", "label": "Body Text Color", "default": "#6B5444" },
+    { "type": "color", "id": "quote_text_color", "label": "Quote/Stat Color", "default": "#6E5A47" },
+    { "type": "color", "id": "divider_color", "label": "Divider Color", "default": "#CDBAA3" },
+
+
+    { "type": "header", "content": "Content" },
+    { "type": "image_picker", "id": "image", "label": "Side Image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow Text", "default": "Why Aiva Ritual" },
+    { "type": "richtext", "id": "heading", "label": "Heading", "default": "<h2>The best<br>Ayurvedic skincare <em>is slow.</em></h2>" },
+    { "type": "range", "id": "heading_size", "label": "Heading Font Size", "min": 24, "max": 100, "step": 2, "default": 56, "unit": "px" },
+    { "type": "richtext", "id": "lead_text", "label": "Lead Paragraph", "default": "<p>Most skincare works on the surface fast, synthetic, and temporary. Aiva Ritual is built differently.</p>" },
+    { "type": "textarea", "id": "quote", "label": "Quote Text", "default": "True beauty is not created. It is revealed slowly, with the right botanicals and the patience to let them work." },
+    { "type": "richtext", "id": "body_text", "label": "Body Paragraph", "default": "<p>Rooted in 5,000 years of Ayurvedic botanical science, every ingredient is selected for its role as a Rasayana.</p>" },
+   
+    { "type": "header", "content": "Spacing Management" },
+    { "type": "range", "id": "space_below_eyebrow", "label": "Space Below Eyebrow", "min": 0, "max": 100, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "space_below_heading", "label": "Space Below Heading", "min": 0, "max": 100, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "space_above_stats", "label": "Space Above Stats", "min": 0, "max": 150, "step": 5, "default": 55, "unit": "px" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat Item",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "stat_num", "label": "Stat Title", "default": "Daily" },
+        { "type": "textarea", "id": "stat_label", "label": "Stat Description", "default": "POSHANA\nNOURISH · ILLUMINATE" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aiva Stats Section",
+      "blocks": [
+        { "type": "stat", "settings": { "stat_num": "Weekly", "stat_label": "SHODHANA\nPURIFY · RESET" } },
+        { "type": "stat", "settings": { "stat_num": "Daily", "stat_label": "POSHANA\nNOURISH · ILLUMINATE" } },
+        { "type": { "stat_num": "With Time", "stat_label": "RADIANCE\nVISIBLE · LASTING" }, "type": "stat" },
+        { "type": "stat", "settings": { "stat_num": "28", "stat_label": "DAY CYCLE\nSKIN RENEWAL" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
