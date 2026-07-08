@@ -1,0 +1,211 @@
+{% style %}
+  .aiva-philosophy-strip-{{ section.id }} {
+    --bg: {{ section.settings.bg_color }};
+    --ink: {{ section.settings.text_color }};
+    --ink-mid: {{ section.settings.body_text_color }};
+    --ink-soft: {{ section.settings.pillar_desc_color }};
+    --gold: {{ section.settings.accent_color }};
+    --gold-light: {{ section.settings.accent_light_color }};
+    --rule: rgba(140, 109, 63, 0.2);
+    --pillar-bg: {{ section.settings.pillar_bg_color }};
+    --pillar-border: rgba(140, 109, 63, 0.15);
+    background: var(--bg);
+    color: var(--ink);
+    width: 100%;
+    overflow: hidden;
+  }
+
+
+  /* Font styling from settings */
+  .aiva-philosophy-strip-{{ section.id }} .aps-inner {
+    font-family: 'Jost', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 96px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+
+  .aiva-philosophy-strip-{{ section.id }} .aps-eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .aiva-philosophy-strip-{{ section.id }} .aps-eyebrow::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+
+  .aiva-philosophy-strip-{{ section.id }} .aps-statement {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 28px;
+  }
+  .aiva-philosophy-strip-{{ section.id }} .aps-statement em {
+    font-style: italic; color: var(--gold); font-weight: 300;
+  }
+
+
+  .aiva-philosophy-strip-{{ section.id }} .aps-body {
+    font-size: 17px;
+    line-height: 1.9;
+    color: var(--ink-mid);
+    max-width: 420px;
+    margin-bottom: 36px;
+  }
+
+
+  .aiva-philosophy-strip-{{ section.id }} .aps-sanskrit {
+    display: flex; align-items: center; gap: 16px;
+    padding-top: 28px; border-top: 1px solid var(--rule);
+  }
+
+
+  .aiva-philosophy-strip-{{ section.id }} .aps-pillars {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+
+
+  .aiva-philosophy-strip-{{ section.id }} .aps-pillar {
+    background: var(--pillar-bg);
+    border: 1px solid var(--pillar-border);
+    border-top: 2px solid var(--gold-light);
+    padding: 32px 28px 28px;
+    position: relative;
+    transition: all 0.25s ease;
+  }
+ 
+  .aiva-philosophy-strip-{{ section.id }} .aps-pillar:hover {
+    box-shadow: 0 8px 32px rgba(140,109,63,0.1);
+    transform: translateY(-2px);
+  }
+
+
+  .aiva-philosophy-strip-{{ section.id }} .aps-pillar-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    position: absolute; bottom: -4px; right: 14px;
+    color: rgba(140,109,63,0.07);
+  }
+
+
+  .aps-fade { opacity: 0; transform: translateY(16px); transition: all 0.65s ease; }
+  .aps-fade.visible { opacity: 1; transform: translateY(0); }
+
+
+  @media (max-width: 960px) {
+    .aiva-philosophy-strip-{{ section.id }} .aps-inner { grid-template-columns: 1fr; padding: 72px 32px; }
+    .aiva-philosophy-strip-{{ section.id }} .aps-pillars { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .aiva-philosophy-strip-{{ section.id }} .aps-pillars { grid-template-columns: 1fr; }
+  }
+{% endstyle %}
+
+
+<section class="aiva-philosophy-strip-{{ section.id }}">
+  <div class="aps-inner">
+    <div class="aps-left">
+      <p class="aps-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="aps-statement">{{ section.settings.heading }}</h2>
+      <div class="aps-body">{{ section.settings.body_text }}</div>
+
+
+      <div class="aps-sanskrit">
+        <span class="aps-sanskrit-word">{{ section.settings.sanskrit_word }}</span>
+        <div class="aps-sanskrit-divider"></div>
+        <span class="aps-sanskrit-meaning">{{ section.settings.sanskrit_meaning | newline_to_br }}</span>
+      </div>
+    </div>
+
+
+    <div class="aps-right">
+      <div class="aps-pillars">
+        {% for block in section.blocks %}
+          <div class="aps-pillar aps-fade" {{ block.shopify_attributes }}>
+            <span class="aps-pillar-num">0{{ forloop.index }}</span>
+            <span class="aps-pillar-icon">{{ block.settings.icon }}</span>
+            <h3 class="aps-pillar-title">{{ block.settings.title }}</h3>
+            <div class="aps-pillar-desc">{{ block.settings.desc }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.aps-fade').forEach(el => observer.observe(el));
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Aiva Philosophy",
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background Color", "default": "#F6F1E8" },
+    { "type": "color", "id": "text_color", "label": "Heading Color", "default": "#1A1410" },
+    { "type": "color", "id": "body_text_color", "label": "Body Text Color", "default": "#3D3028" },
+    { "type": "color", "id": "accent_color", "label": "Accent (Gold) Color", "default": "#8C6D3F" },
+    { "type": "color", "id": "accent_light_color", "label": "Pillar Top Border", "default": "#B8975A" },
+    { "type": "color", "id": "pillar_bg_color", "label": "Pillar Background", "default": "#FFFFFF" },
+    { "type": "color", "id": "pillar_desc_color", "label": "Pillar Description", "default": "#6B5C4E" },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow Text", "default": "Why Aiva Ritual exists" },
+    { "type": "richtext", "id": "heading", "label": "Heading", "default": "<h2>The most intelligent<br><em>Ayurvedic skincare</em><br>is not synthetic — it is wise.</h2>" },
+    { "type": "range", "id": "heading_size", "min": 30, "max": 70, "step": 1, "unit": "px", "label": "Heading Font Size", "default": 52 },
+    { "type": "richtext", "id": "body_text", "label": "Main Body Text", "default": "<p>Rooted in 5,000 years of Ayurvedic botanical wisdom...</p>" },
+    { "type": "text", "id": "sanskrit_word", "label": "Sanskrit Word", "default": "Ayurveda" },
+    { "type": "textarea", "id": "sanskrit_meaning", "label": "Meaning Text", "default": "The science of life\nआयुर्वेद · 5,000 years of botanical skin wisdom" }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pillar",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon (Symbol)", "default": "◈" },
+        { "type": "richtext", "id": "title", "label": "Title", "default": "<h3>Ancient <em>Wisdom</em></h3>" },
+        { "type": "textarea", "id": "desc", "label": "Description", "default": "Every ingredient is rooted in classical Ayurvedic texts." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aiva Philosophy",
+      "blocks": [
+        { "type": "pillar" },
+        { "type": "pillar" },
+        { "type": "pillar" },
+        { "type": "pillar" }
+      ]
+    }
+  ]
+}
+{% endschema %}
