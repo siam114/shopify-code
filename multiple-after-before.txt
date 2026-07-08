@@ -1,0 +1,280 @@
+<section
+  id="ella-js-sticky-{{ section.id }}"
+  class="ella-js-section"
+  style="
+    --ella-bg: {{ section.settings.bg_color }};
+    --ella-title: #000000;
+    --ella-text: #000000;
+    --ella-btn-bg: {{ section.settings.btn_bg }};
+    --ella-btn-text: {{ section.settings.btn_text_color }};
+    --ella-radius: {{ section.settings.image_radius }}px;
+  "
+>
+  <div class="container ella-js-container">
+    <div class="ella-js-flex-row">
+     
+      <div class="ella-js-text-col">
+        {% for block in section.blocks %}
+          <div
+            class="ella-js-item"
+            data-img-src="{{ block.settings.image | image_url: width: 1200 }}"
+            {{ block.shopify_attributes }}
+          >
+            <div class="ella-js-inner">
+              {% if block.settings.tag != blank %}
+                <span class="ella-js-tag">{{ block.settings.tag }}</span>
+              {% endif %}
+             
+              <h2 class="ella-js-heading" style="color: #000000; font-weight: 400;">{{ block.settings.title }}</h2>
+              <div class="ella-js-desc" style="color: #000000;">{{ block.settings.text }}</div>
+             
+              {% if block.settings.button_text != blank %}
+                <a href="{{ block.settings.button_link }}" class="ella-js-btn">
+                  {{ block.settings.button_text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+
+      <div class="ella-js-visual-col">
+        <div id="ellaStickyBox-{{ section.id }}" class="ella-js-sticky-box">
+          <div class="ella-js-img-wrapper">
+            {% if section.blocks.size > 0 %}
+              <img
+                id="ellaMainImg-{{ section.id }}"
+                src="{{ section.blocks[0].settings.image | image_url: width: 1200 }}"
+                alt="Results"
+                loading="eager"
+              >
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</section>
+
+
+<style>
+.ella-js-section {
+  background: var(--ella-bg);
+  padding: 80px 0;
+  overflow: visible !important;
+}
+
+
+.ella-js-flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  position: relative;
+}
+
+
+.ella-js-text-col {
+  flex: 1;
+  min-width: 0;
+}
+
+
+.ella-js-visual-col {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+
+.ella-js-item {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: 60px 0;
+  opacity: 0.15;
+  transition: opacity 0.4s ease;
+}
+
+
+.ella-js-item.is-active {
+  opacity: 1;
+}
+
+
+.ella-js-sticky-box {
+  width: 100%;
+  border-radius: var(--ella-radius);
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  background: #f7f7f7;
+}
+
+
+/* JS Classes for Sticky Logic */
+.ella-js-sticky-box.fixed {
+  position: fixed;
+  top: 100px;
+  z-index: 99;
+}
+
+
+.ella-js-sticky-box.absolute-bottom {
+  position: absolute;
+  bottom: 0;
+  top: auto;
+}
+
+
+.ella-js-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.3s ease-in-out;
+}
+
+
+/* Typography */
+.ella-js-tag {
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 50px;
+  padding: 4px 14px;
+  font-size: 10px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+
+.ella-js-heading {
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+
+.ella-js-desc {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+
+.ella-js-btn {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 12px 35px;
+  background: var(--ella-btn-bg);
+  color: var(--ella-btn-text);
+  text-decoration: none;
+  font-weight: 400;
+  border-radius: 4px;
+}
+
+
+@media (max-width: 991px) {
+  .ella-js-flex-row { flex-direction: column-reverse; }
+  .ella-js-sticky-box.fixed, .ella-js-sticky-box.absolute-bottom {
+    position: relative !important;
+    top: 0 !important;
+    width: 100% !important;
+  }
+  .ella-js-item { min-height: auto; padding: 30px 0; opacity: 1; }
+}
+</style>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const section = document.querySelector('#ella-js-sticky-{{ section.id }}');
+  if (!section) return;
+
+
+  const stickyBox = section.querySelector('#ellaStickyBox-{{ section.id }}');
+  const visualCol = section.querySelector('.ella-js-visual-col');
+  const mainImg = section.querySelector('#ellaMainImg-{{ section.id }}');
+  const items = section.querySelectorAll('.ella-js-item');
+
+
+  // Intersection Observer for Image Swapping
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        items.forEach(i => i.classList.remove('is-active'));
+        entry.target.classList.add('is-active');
+        const newSrc = entry.target.getAttribute('data-img-src');
+        if (newSrc && mainImg.src !== newSrc) {
+          mainImg.style.opacity = '0.4';
+          setTimeout(() => { mainImg.src = newSrc; mainImg.style.opacity = '1'; }, 200);
+        }
+      }
+    });
+  }, { rootMargin: "-30% 0px -30% 0px", threshold: 0.1 });
+
+
+  items.forEach(item => observer.observe(item));
+
+
+  // JS Sticky Scroll Logic
+  const handleSticky = () => {
+    if (window.innerWidth < 992) return;
+
+
+    const sectionRect = section.getBoundingClientRect();
+    const colWidth = visualCol.offsetWidth;
+    const stickyHeight = stickyBox.offsetHeight;
+    const topOffset = 100;
+
+
+    if (sectionRect.top <= topOffset) {
+      if (sectionRect.bottom <= (stickyHeight + topOffset)) {
+        stickyBox.classList.remove('fixed');
+        stickyBox.classList.add('absolute-bottom');
+        stickyBox.style.width = `100%`;
+      } else {
+        stickyBox.classList.remove('absolute-bottom');
+        stickyBox.classList.add('fixed');
+        stickyBox.style.width = `${colWidth}px`;
+      }
+    } else {
+      stickyBox.classList.remove('fixed', 'absolute-bottom');
+      stickyBox.style.width = `100%`;
+    }
+  };
+
+
+  window.addEventListener('scroll', handleSticky);
+  window.addEventListener('resize', handleSticky);
+});
+</script>
+
+
+{% schema %}
+{
+  "name": "Ella JS Sticky Black",
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "btn_bg", "label": "Button Color", "default": "#000000" },
+    { "type": "color", "id": "btn_text_color", "label": "Button Text", "default": "#ffffff" },
+    { "type": "range", "id": "image_radius", "label": "Image Radius", "min": 0, "max": 50, "default": 10, "unit": "px" }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "tag", "label": "Tag", "default": "DULLNESS" },
+        { "type": "text", "id": "title", "label": "Name", "default": "Customer Name" },
+        { "type": "richtext", "id": "text", "label": "Review", "default": "<p>Write testimonial text here.</p>" },
+        { "type": "text", "id": "button_text", "label": "Button Text" },
+        { "type": "url", "id": "button_link", "label": "Button Link" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Ella JS Sticky Black" } ]
+}
+{% endschema %}
