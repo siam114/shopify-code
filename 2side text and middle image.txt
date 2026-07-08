@@ -1,0 +1,281 @@
+{% comment %}
+Shopify Premium Sticky Section - Final Compact & Alignment Fixed
+{% endcomment %}
+
+
+<div id="sticky-section-{{ section.id }}" class="sticky-main-wrapper">
+  {% if section.settings.main_heading != blank or section.settings.main_desc != blank %}
+    <div class="section-header">
+      {% if section.settings.main_heading != blank %}
+        <h2 class="main-title">{{ section.settings.main_heading }}</h2>
+      {% endif %}
+      {% if section.settings.main_desc != blank %}
+        <div class="main-subtitle">{{ section.settings.main_desc }}</div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+
+  <div class="custom-container">
+   
+    <div class="side-col col-left">
+      <div class="flex-cards">
+        {% for block in section.blocks %}
+          {% if block.type == 'left_card' %}
+            <div class="feature-item-card" {{ block.shopify_attributes }}>
+              <div class="icon-wrap">
+                {% if block.settings.icon_image %}
+                  <img src="{{ block.settings.icon_image | image_url: width: 100 }}" alt="" loading="lazy">
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag }}
+                {% endif %}
+              </div>
+              <div class="text-wrap">
+                <h3 class="extra-large-title">{{ block.settings.icon_text }}</h3>
+                <div class="desc">{{ block.settings.icon_description }}</div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+
+    <div class="middle-col col-img">
+      <div class="sticky-element">
+        <div class="img-frame">
+          {% if section.settings.image %}
+            <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="" loading="lazy">
+          {% else %}
+             {{ 'image' | placeholder_svg_tag }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+
+    <div class="side-col col-right">
+      <div class="flex-cards">
+        {% for block in section.blocks %}
+          {% if block.type == 'right_card' %}
+            <div class="feature-item-card" {{ block.shopify_attributes }}>
+              <div class="icon-wrap">
+                {% if block.settings.info_image %}
+                  <img src="{{ block.settings.info_image | image_url: width: 100 }}" alt="" loading="lazy">
+                {% else %}
+                   {{ 'image' | placeholder_svg_tag }}
+                {% endif %}
+              </div>
+              <div class="text-wrap">
+                <h3 class="extra-large-title">{{ block.settings.info_heading }}</h3>
+                <div class="desc">{{ block.settings.info_text }}</div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+       
+        {% if section.settings.button_text != blank %}
+          <div class="action-btn-wrap">
+            <a href="{{ section.settings.button_url }}" class="cta-btn">{{ section.settings.button_text }}</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+<style>
+/* --- BASE STYLES --- */
+.sticky-main-wrapper {
+  background: {{ section.settings.bg_color }};
+  padding: 50px 0;
+  overflow: hidden;
+}
+
+
+.section-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+  padding: 0 20px;
+}
+
+
+.main-title {
+  font-size: 32px;
+  margin-bottom: 10px;
+  font-weight: 400;
+  margin-top:0;
+}
+
+
+.custom-container {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 25px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  align-items: center; /* লম্বালম্বিভাবে সব সেন্টার অ্যালাইনড থাকবে */
+}
+
+
+.side-col {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.flex-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* কার্ডগুলোর মাঝের দূরত্ব */
+}
+
+
+/* --- Compact Card Design --- */
+.feature-item-card {
+  background: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 15px; /* কম প্যাডিং যাতে হোয়াইট স্পেস কম লাগে */
+  height: fit-content; /* বাড়তি লম্বা হবে না */
+  width: 100%;
+  padding-bottom: 50px;
+    padding-top: 50px;
+}
+
+
+.feature-item-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+  border-color: #f89119 !important;
+}
+
+
+/* --- Image Column --- */
+.middle-col {
+  display: flex;
+  justify-content: center;
+}
+
+
+.sticky-element {
+  position: sticky;
+  top: 50px;
+  width: 100%;
+}
+
+
+.img-frame {
+  width: 100%;
+  border-radius: {{ section.settings.image_radius }}px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  line-height: 0;
+}
+
+
+.img-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* Text & Icon Sizes */
+.icon-wrap {
+  width: 45px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+.icon-wrap img { width: 100%; height: auto; }
+
+
+.extra-large-title {
+  font-size: 24px;
+  margin: 0 0 5px 0;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+
+.desc {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #666;
+}
+.desc p { margin: 0; }
+
+
+.action-btn-wrap {
+  margin-top: 10px;
+}
+
+
+.cta-btn {
+  display: block;
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: 0.3s;
+}
+.cta-btn:hover { background: #333; }
+
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .custom-container {
+    grid-template-columns: 1fr !important;
+    max-width: 600px;
+  }
+  .col-img { order: 1; margin-bottom: 20px; }
+  .col-left { order: 2; }
+  .col-right { order: 3; }
+  .sticky-element { position: relative !important; top: 0 !important; }
+}
+</style>
+
+
+{% schema %}
+{
+  "name": "Final Sticky Section",
+  "settings": [
+    { "type": "text", "id": "main_heading", "label": "Section Heading", "default": "Cleansing Bars" },
+    { "type": "richtext", "id": "main_desc", "label": "Section Description" },
+    { "type": "image_picker", "id": "image", "label": "Middle Image" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+    { "type": "range", "id": "image_radius", "label": "Image Radius", "min": 0, "max": 100, "default": 30 },
+    { "type": "text", "id": "button_text", "label": "Button Label", "default": "Shop All Bars" },
+    { "type": "url", "id": "button_url", "label": "Button Link" }
+  ],
+  "blocks": [
+    { "type": "left_card", "name": "Left Card", "settings": [
+      { "type": "image_picker", "id": "icon_image", "label": "Icon" },
+      { "type": "text", "id": "icon_text", "label": "Title" },
+      { "type": "richtext", "id": "icon_description", "label": "Description" }
+    ]},
+    { "type": "right_card", "name": "Right Card", "settings": [
+      { "type": "image_picker", "id": "info_image", "label": "Icon" },
+      { "type": "text", "id": "info_heading", "label": "Title" },
+      { "type": "richtext", "id": "info_text", "label": "Description" }
+    ]}
+  ],
+  "presets": [{ "name": "Final Sticky Section" }]
+}
+{% endschema %}
