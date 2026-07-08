@@ -1,0 +1,374 @@
+{%- style -%}
+
+@font-face {
+  font-family: 'Arapey';
+  src: url('https://cdn.shopify.com/s/files/1/0683/3559/9787/files/Arapey-Regular.ttf?v=1770667921') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+  .ingredient-section-{{ section.id }} {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .ing-container-{{ section.id }} {
+    max-width: {{ section.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 100px;
+  }
+
+  /* Header Spacing */
+  .ing-header-{{ section.id }} {
+    text-align: {{ section.settings.text_alignment }};
+    margin-bottom: 60px;
+  }
+
+  /* Stacked Images */
+  .ing-image-stack-{{ section.id }} {
+    flex: 1;
+    position: relative;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+  }
+
+  .ing-card-{{ section.id }} {
+    position: absolute;
+    width: 100%;
+    max-width: 440px;
+    aspect-ratio: 1/1;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    background: transparent; /* Changed to transparent to fix white box issue */
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .ing-card-{{ section.id }} img {
+    width: 100%; height: 100%; object-fit: cover; pointer-events: none;
+  }
+
+  /* Core Animation States */
+  .ing-card-{{ section.id }}.active {
+    z-index: 30;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ing-card-{{ section.id }}.next-stack {
+    z-index: 20;
+    transform: translate3d(15px, -15px, -50px) rotate(3deg);
+    opacity: 0.9;
+    visibility: visible;
+  }
+
+  .ing-card-{{ section.id }}.back-stack {
+    z-index: 10;
+    transform: translate3d(30px, -30px, -100px) rotate(6deg);
+    opacity: 0.6;
+    visibility: visible;
+  }
+
+  /* The "Arc" Slide Out Effect from Video */
+  .slide-out-arc {
+    transform: translate3d(-120%, -30%, 100px) rotate(-15deg) !important;
+    opacity: 0 !important;
+    z-index: 40 !important;
+  }
+
+  /* Content Styling */
+  .ing-content-{{ section.id }} { 
+    flex: 1; 
+  }
+  
+  .ing-content-item-{{ section.id }} { 
+    display: none; 
+  }
+  
+  .ing-content-item-{{ section.id }}.active { 
+    display: block; 
+    animation: ingFadeIn 0.6s ease forwards; 
+  }
+
+  @keyframes ingFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .ing-subheading { 
+    font-weight: 600; 
+    font-size: 14px; 
+    margin-bottom: 25px; 
+    display: block; 
+    text-transform: uppercase; 
+  }
+  
+  .ing-title { 
+    font-size: 30px; 
+    font-family: 'Arapey'; 
+    margin-bottom: 25px; 
+    line-height: 1.1; 
+  }
+  
+  .ing-desc { 
+    font-size: 17px; 
+    line-height: 1.6; 
+    color: #F89119; 
+    margin-bottom: 40px; 
+  }
+
+  /* Navigation */
+  .ing-nav { 
+    display: flex; 
+    gap: 20px; 
+  }
+  
+  .ing-btn {
+    width: 48px; 
+    height: 48px; 
+    border: 1px solid #F89119; 
+    border-radius: 50%;
+    background: #fff; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: 0.3s;
+  }
+  
+  .ing-btn:hover { 
+    background: #F89119; 
+    border-color: #F89119; 
+    color: #fff; 
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 991px) {
+    .ing-container-{{ section.id }} { 
+      flex-direction: column; 
+      gap: 50px; 
+    }
+    
+    .ing-image-stack-{{ section.id }} { 
+      width: 100%; 
+      height: 300px; /* Reduced height for mobile */
+      min-height: 300px;
+    }
+    
+    .ing-card-{{ section.id }} {
+      max-width: 300px; /* Smaller cards on mobile */
+    }
+    
+    .ing-content-{{ section.id }} {
+      width: 100%;
+      order: 2; /* Ensure content comes after image */
+    }
+    
+    .ing-title { 
+      font-size: 24px; 
+      text-align: center;
+    }
+    
+    .ing-subheading, .ing-desc {
+      text-align: center;
+    }
+    
+    .ing-nav {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .ing-image-stack-{{ section.id }} { 
+      height: 250px;
+      min-height: 250px;
+    }
+    
+    .ing-card-{{ section.id }} {
+      max-width: 250px;
+    }
+    
+    .ing-title { 
+      font-size: 20px; 
+    }
+    
+    .ing-desc {
+      font-size: 15px;
+    }
+    
+    .ing-header-{{ section.id }} {
+      margin-bottom: 30px;
+    }
+
+    .content-item{
+      margin-top:50px;
+    }
+
+     .ing-container-{{ section.id }} {
+      margin-bottom:30px;
+     }
+  }
+
+  @media (max-width: 480px) {
+    .ing-image-stack-{{ section.id }} { 
+      height: 220px;
+      min-height: 220px;
+    }
+    
+    .ing-card-{{ section.id }} {
+      max-width: 220px;
+    }
+    
+    .ing-btn {
+      width: 40px;
+      height: 40px;
+    }
+
+  }
+{%- endstyle -%}
+
+<section class="ingredient-section-{{ section.id }}">
+  <div class="ing-header-{{ section.id }}">
+    <span style="color:{{section.settings.sub_color}};">{{ section.settings.subheading }}</span>
+    <h2 style="color:{{section.settings.heading_color}}; font-family: 'Arapey'; font-size: {{section.settings.heading_font_size}}px;">{{ section.settings.heading }}</h2>
+  </div>
+
+  <div class="ing-container-{{ section.id }}">
+    <div class="ing-image-stack-{{ section.id }}">
+      {% for block in section.blocks %}
+        {% if block.settings.image != blank %}
+          <div class="ing-card-{{ section.id }} stack-item" data-index="{{ forloop.index0 }}">
+            <img src="{{ block.settings.image | img_url: '900x900', crop: 'center' }}">
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ing-content-{{ section.id }}">
+      {% for block in section.blocks %}
+        <div class="ing-content-item-{{ section.id }} content-item" data-index="{{ forloop.index0 }}">
+          <span class="ing-subheading">{{ block.settings.subheading }}</span>
+          <h3 class="ing-title">{{ block.settings.heading }}</h3>
+          <div class="ing-desc">{{ block.settings.description }}</div>
+          
+          <div class="ing-nav">
+            <button class="ing-btn prev-v">❮</button>
+            <button class="ing-btn next-v">❯</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const container = document.querySelector('.ingredient-section-{{ section.id }}');
+  const cards = Array.from(container.querySelectorAll('.stack-item'));
+  const contents = Array.from(container.querySelectorAll('.content-item'));
+
+  let current = 0;
+  let isAnimating = false;
+  const total = cards.length;
+
+  function render() {
+    cards.forEach((card, i) => {
+      // Remove all stack classes first
+      card.classList.remove('active', 'next-stack', 'back-stack', 'slide-out-arc');
+      contents[i].classList.remove('active');
+
+      const pos = (i - current + total) % total;
+
+      if (pos === 0) {
+        card.classList.add('active');
+        contents[i].classList.add('active');
+      } else if (pos === 1 && total > 1) {
+        // Only add next-stack class if 2nd slide exists
+        card.classList.add('next-stack');
+      } else if (pos === 2 && total > 2) {
+        // Only add back-stack class if 3rd slide exists
+        card.classList.add('back-stack');
+      }
+    });
+  }
+
+  function updateStack(direction) {
+    if (isAnimating || total <= 1) return;
+    isAnimating = true;
+
+    const activeCard = cards[current];
+
+    if (direction === 'next') {
+      activeCard.classList.add('slide-out-arc');
+    }
+
+    setTimeout(() => {
+      activeCard.classList.remove('slide-out-arc');
+
+      current =
+        direction === 'next'
+          ? (current + 1) % total
+          : (current - 1 + total) % total;
+
+      render();
+      isAnimating = false;
+    }, 500);
+  }
+
+  /* 🔥 EVENT DELEGATION */
+  container.addEventListener('click', function (e) {
+    if (e.target.closest('.next-v')) {
+      updateStack('next');
+    }
+
+    if (e.target.closest('.prev-v')) {
+      updateStack('prev');
+    }
+  });
+
+  /* Initial render */
+  render();
+});
+</script>
+
+
+{% schema %}
+{
+  "name": "Ingredient Arc Slider",
+  "settings": [
+    { "type": "text", "id": "subheading", "label": "Section Subheading", "default": "Rooted in Ancient Wisdom" },
+    { "type": "color", "id": "sub_color", "label": "Subheading Color", "default": "#121212" },
+    { "type": "text", "id": "heading", "label": "Section Heading", "default": "Key Ingredients" },
+    { "type": "range", "id": "heading_font_size", "label": "Heading Font Size", "min": 24, "max": 80, "default": 48 },
+    { "type": "color", "id": "heading_color", "label": "Heading Color", "default": "#121212" },
+    { "type": "select", "id": "text_alignment", "label": "Align", "options": [{"value":"left","label":"Left"},{"value":"center","label":"Center"}], "default": "center" },
+    { "type": "number", "id": "container_width", "label": "Width", "default": 1200 },
+    { "type": "range", "id": "padding_top", "label": "Top", "min": 0, "max": 100, "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom", "min": 0, "max": 100, "default": 60 }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Ingredient",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "subheading", "label": "Block Subheading", "default": "Deep Cleansing" },
+        { "type": "text", "id": "heading", "label": "Block Heading", "default": "Activated Charcoal" },
+        { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Absorbs excess oil and exfoliates skin to remove dead cells.</p>" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Ingredient Arc Slider" }]
+}
+{% endschema %}
