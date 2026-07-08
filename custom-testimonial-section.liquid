@@ -1,0 +1,370 @@
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+
+{%- style -%}
+  .testimonial-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_mb }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mb }}px;
+    background-color: {{ section.settings.bg_color }};
+    overflow: hidden;
+  }
+
+
+  @media screen and (min-width: 750px) {
+    .testimonial-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+
+  .testimonial-container-{{ section.id }} {
+    max-width: {{ section.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 50px; /* Arrows er jonno side padding add kora hoyeche */
+    position: relative;
+  }
+
+
+  .testimonial-title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: {{ section.settings.title_font_size }}px;
+    font-family: 'Raleway' !important;
+    font-weight: 500;
+    text-transform: uppercase !important;
+  }
+
+
+  .testimonial-card {
+    background-color: {{ section.settings.card_bg_color }};
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+
+  .testimonial-stars {
+    color: {{ section.settings.star_color }};
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+
+
+  .testimonial-text {
+    font-size: {{ section.settings.card_font_size }}px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+  }
+
+
+  .testimonial-author-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+
+  .author-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+
+  .author-info {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+
+  /* --- Navigation Arrows Outside Logic --- */
+  .swiper-button-next-{{ section.id }},
+  .swiper-button-prev-{{ section.id }} {
+    color: {{ section.settings.star_color }};
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    margin: 0;
+  }
+
+
+  .swiper-button-prev-{{ section.id }} {
+    left: 10px; /* Container er baire/shimanay thakbe */
+  }
+
+
+  .swiper-button-next-{{ section.id }} {
+    right: 10px; /* Container er baire/shimanay thakbe */
+  }
+ 
+  .swiper-button-next-{{ section.id }}:after,
+  .swiper-button-prev-{{ section.id }}:after {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+
+  .swiper-pagination-{{ section.id }} {
+    position: relative;
+    margin-top: 30px;
+  }
+
+
+  .swiper-pagination-bullet-active {
+    background: {{ section.settings.star_color }} !important;
+  }
+{%- endstyle -%}
+
+
+<div class="testimonial-section-{{ section.id }}">
+  <div class="testimonial-container-{{ section.id }}">
+    {% if section.settings.title != blank %}
+      <h2 class="testimonial-title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+
+    <div class="swiper swiper-{{ section.id }}">
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          <div class="swiper-slide h-auto" {{ block.shopify_attributes }}>
+            <div class="testimonial-card">
+              <div class="testimonial-stars">
+                {% for i in (1..5) %}★{% endfor %}
+              </div>
+             
+              <div class="testimonial-text">
+                "{{ block.settings.text }}"
+              </div>
+
+
+              <div class="testimonial-author-wrapper">
+                {% if block.settings.author_image != blank %}
+                  <img
+                    src="{{ block.settings.author_image | image_url: width: 100 }}"
+                    alt="{{ block.settings.author_name }}"
+                    class="author-image"
+                    loading="lazy"
+                  >
+                {% endif %}
+                <div class="author-info">
+                  <strong>— {{ block.settings.author_name }}</strong>
+                  {% if block.settings.author_title != blank %}
+                    <br><span>{{ block.settings.author_title }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+     
+      <!-- Pagination -->
+      <div class="swiper-pagination swiper-pagination-{{ section.id }}"></div>
+    </div>
+
+
+    <!-- Navigation Arrows Outside the Swiper Div but Inside the Container -->
+    <div class="swiper-button-next swiper-button-next-{{ section.id }}"></div>
+    <div class="swiper-button-prev swiper-button-prev-{{ section.id }}"></div>
+  </div>
+</div>
+
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    new Swiper('.swiper-{{ section.id }}', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true,
+      navigation: {
+        nextEl: '.swiper-button-next-{{ section.id }}',
+        prevEl: '.swiper-button-prev-{{ section.id }}',
+      },
+      pagination: {
+        el: '.swiper-pagination-{{ section.id }}',
+        clickable: true,
+      },
+      breakpoints: {
+        750: {
+          slidesPerView: {{ section.settings.columns_desktop }},
+          enabled: {% if section.blocks.size > section.settings.columns_desktop %}true{% else %}false{% endif %}
+        }
+      }
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "Testimonials Slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Loved by candlelight lovers."
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 20,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "number",
+      "id": "container_width",
+      "label": "Container Max Width (px)",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Visible Columns (Desktop)",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Styling & Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#fdf5ed"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star & Arrow Color",
+      "default": "#8b2b1a"
+    },
+    {
+      "type": "range",
+      "id": "card_font_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Card Text Font Size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mb",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mb",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Testimonial Text",
+          "default": "Add your customer review here."
+        },
+        {
+          "type": "image_picker",
+          "id": "author_image",
+          "label": "Author Image"
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author Name",
+          "default": "Customer Name"
+        },
+        {
+          "type": "text",
+          "id": "author_title",
+          "label": "Author Subtitle",
+          "default": "Verified Buyer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials Slider",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}
