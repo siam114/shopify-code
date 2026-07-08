@@ -1,0 +1,293 @@
+Custom Product Tabs block
+
+
+
+
+{% comment %} Custom Product Tabs - Ride Theme, Smooth Height Transition {% endcomment %}
+              {% when 'custom_informaiton_tabs' %}
+                {%- for block in section.blocks -%}
+                  {%- if block.type == 'custom_informaiton_tabs' -%}
+                    {%- assign first_tab = '' -%}
+                    {%- if block.settings.show_description -%}
+                      {%- assign first_tab = 'description' -%}
+                    {%- elsif block.settings.show_shipping -%}
+                      {%- assign first_tab = 'shipping' -%}
+                    {%- elsif block.settings.show_washing -%}
+                      {%- assign first_tab = 'washing' -%}
+                    {%- endif -%}
+
+
+                    <div class="custom-info-tabs" id="custom-info-tabs-{{ block.id }}" {{ block.shopify_attributes }}>
+                      <div class="custom-info-tabs__nav" role="tablist" aria-label="Product information tabs">
+                        {%- if block.settings.show_description -%}
+                          <button
+                            type="button"
+                            class="custom-info-tabs__btn{% if first_tab == 'description' %} is-active{% endif %}"
+                            data-tab="description"
+                            role="tab"
+                            aria-selected="{% if first_tab == 'description' %}true{% else %}false{% endif %}"
+                          >
+                            {{ block.settings.description_tab_title }}
+                          </button>
+                        {%- endif -%}
+
+
+                        {%- if block.settings.show_shipping -%}
+                          <button
+                            type="button"
+                            class="custom-info-tabs__btn{% if first_tab == 'shipping' %} is-active{% endif %}"
+                            data-tab="shipping"
+                            role="tab"
+                            aria-selected="{% if first_tab == 'shipping' %}true{% else %}false{% endif %}"
+                          >
+                            {{ block.settings.shipping_tab_title }}
+                          </button>
+                        {%- endif -%}
+
+
+                        {%- if block.settings.show_washing -%}
+                          <button
+                            type="button"
+                            class="custom-info-tabs__btn{% if first_tab == 'washing' %} is-active{% endif %}"
+                            data-tab="washing"
+                            role="tab"
+                            aria-selected="{% if first_tab == 'washing' %}true{% else %}false{% endif %}"
+                          >
+                            {{ block.settings.washing_tab_title }}
+                          </button>
+                        {%- endif -%}
+                      </div>
+
+
+                      <div class="custom-info-tabs__content">
+                        {%- if block.settings.show_description -%}
+                          <div
+                            class="custom-info-tabs__panel{% if first_tab == 'description' %} is-active{% endif %}"
+                            data-panel="description"
+                            role="tabpanel"
+                          >
+                            {{ block.settings.description_tab_description }}
+                          </div>
+                        {%- endif -%}
+
+
+                        {%- if block.settings.show_shipping -%}
+                          <div
+                            class="custom-info-tabs__panel{% if first_tab == 'shipping' %} is-active{% endif %}"
+                            data-panel="shipping"
+                            role="tabpanel"
+                          >
+                            {{ block.settings.shipping_tab_description }}
+                          </div>
+                        {%- endif -%}
+
+
+                        {%- if block.settings.show_washing -%}
+                          <div
+                            class="custom-info-tabs__panel{% if first_tab == 'washing' %} is-active{% endif %}"
+                            data-panel="washing"
+                            role="tabpanel"
+                          >
+                            {{ block.settings.washing_tab_description }}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+
+
+                    <!-- CSS -->
+                    <style>
+                      /* Nav container */
+                      #custom-info-tabs-{{ block.id }} .custom-info-tabs__nav {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 12px;
+                        margin-bottom: 16px;
+                      }
+
+
+                      /* Buttons */
+                      #custom-info-tabs-{{ block.id }} .custom-info-tabs__btn {
+                        width: 100%;
+                        padding: 10px 16px;
+                        border: 1px solid #444;
+                        background: #222;
+                        color: #ccc;
+                        font-weight: 600;
+                        cursor: pointer;
+                        border-radius: 6px;
+                        text-align: center;
+                        transition: all 0.3s ease;
+                      }
+
+
+                      #custom-info-tabs-{{ block.id }} .custom-info-tabs__btn:hover {
+                        background: #333;
+                        color: #fff;
+                        border-color: #fff;
+                      }
+
+
+                      #custom-info-tabs-{{ block.id }} .custom-info-tabs__btn.is-active {
+                        background: #fff;
+                        color: #111;
+                        border-color: #fff;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+                      }
+
+
+                      /* Panel wrapper for smooth height */
+                      #custom-info-tabs-{{ block.id }} .custom-info-tabs__panel-wrapper {
+                        overflow: hidden;
+                        transition: height 0.4s ease;
+                      }
+
+
+                      /* Panels */
+                      #custom-info-tabs-{{ block.id }} .custom-info-tabs__panel {
+                        padding: 16px;
+                        border-radius: 8px;
+                        background: #111;
+                        color: #eee;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                      }
+
+
+                      /* Mobile responsive */
+                      @media (max-width: 749px) {
+                        #custom-info-tabs-{{ block.id }} .custom-info-tabs__nav {
+                          grid-template-columns: 1fr;
+                          gap: 10px;
+                        }
+                      }
+                    </style>
+
+
+                    <!-- JS -->
+                    <script>
+                      (function () {
+                        var wrapper = document.getElementById('custom-info-tabs-{{ block.id }}');
+                        if (!wrapper) return;
+
+
+                        var buttons = wrapper.querySelectorAll('.custom-info-tabs__btn');
+                        var panels = wrapper.querySelectorAll('.custom-info-tabs__panel');
+
+
+                        // Wrap each panel for smooth height
+                        panels.forEach(function (panel) {
+                          var wrapperDiv = document.createElement('div');
+                          wrapperDiv.classList.add('custom-info-tabs__panel-wrapper');
+                          panel.parentNode.insertBefore(wrapperDiv, panel);
+                          wrapperDiv.appendChild(panel);
+
+
+                          if (panel.classList.contains('is-active')) {
+                            wrapperDiv.style.height = panel.scrollHeight + 'px';
+                          } else {
+                            wrapperDiv.style.height = '0px';
+                          }
+                        });
+
+
+                        buttons.forEach(function (button) {
+                          button.addEventListener('click', function () {
+                            var tab = button.getAttribute('data-tab');
+
+
+                            buttons.forEach(function (btn) {
+                              btn.classList.remove('is-active');
+                              btn.setAttribute('aria-selected', 'false');
+                            });
+                            button.classList.add('is-active');
+                            button.setAttribute('aria-selected', 'true');
+
+
+                            panels.forEach(function (panel) {
+                              var wrapperDiv = panel.parentNode;
+                              if (panel.getAttribute('data-panel') === tab) {
+                                panel.classList.add('is-active');
+                                wrapperDiv.style.height = panel.scrollHeight + 'px';
+                              } else {
+                                panel.classList.remove('is-active');
+                                wrapperDiv.style.height = '0px';
+                              }
+                            });
+                          });
+                        });
+                      })();
+                    </script>
+                  {%- endif -%}
+                {%- endfor -%}
+
+
+
+Schema
+
+
+
+
+{
+      "type": "custom_informaiton_tabs",
+      "name": "Custom Informaiton Tabs",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_description",
+          "label": "Show Description",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "description_tab_title",
+          "label": "Description Tab Title",
+          "default": "Description Tab"
+        },
+        {
+          "type": "richtext",
+          "id": "description_tab_description",
+          "label": "Description Tab Description",
+          "default": "<p>description</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_shipping",
+          "label": "Show Shipping",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "shipping_tab_title",
+          "label": "Shipping Tab Title",
+          "default": "Shipping Tab"
+        },
+        {
+          "type": "richtext",
+          "id": "shipping_tab_description",
+          "label": "Shipping Tab Description",
+          "default": "<p>shipping</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_washing",
+          "label": "Show Washing",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "washing_tab_title",
+          "label": "Washing Tab Title",
+          "default": "Washing Tab"
+        },
+        {
+          "type": "richtext",
+          "id": "washing_tab_description",
+          "label": "Washing Tab Description",
+          "default": "<p>washing</p>"
+        }
+      ]
+    },
+
+
+
