@@ -1,0 +1,298 @@
+{%- style -%}
+  #m-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+
+  .m-gallery-grid-{{ section.id }} {
+    display: grid;
+    gap: {{ section.settings.gap }}px;
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+  }
+
+
+  @media screen and (min-width: 750px) {
+    .m-gallery-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    }
+  }
+
+
+  .m-gallery-item-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ section.settings.border_radius }}px;
+  }
+
+
+  .m-gallery-image-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+    {% if section.settings.image_ratio == 'square' %}
+      aspect-ratio: 1 / 1;
+    {% elsif section.settings.image_ratio == 'portrait' %}
+      aspect-ratio: 2 / 3;
+    {% endif %}
+  }
+
+
+  .m-gallery-item-{{ section.id }}:hover .m-gallery-image-{{ section.id }} {
+    transform: scale(1.08);
+  }
+
+
+  .m-gallery-overlay-{{ section.id }} {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    z-index: 2;
+  }
+
+
+  .m-gallery-item-{{ section.id }}:hover .m-gallery-overlay-{{ section.id }} {
+    opacity: 1;
+  }
+
+
+  .m-gallery-title-{{ section.id }} {
+    color: #fff !important;
+    margin: 10px 0 0 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+{%- endstyle -%}
+
+
+<section id="m-section-{{ section.id }}" class="m-gallery-section">
+  <div class="page-width">
+    {% if section.settings.heading != blank %}
+      <div style="text-align: {{ section.settings.header_alignment }}; margin-bottom: 40px;">
+        <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+      </div>
+    {% endif %}
+
+
+    <div class="m-gallery-grid-{{ section.id }}">
+      {% for block in section.blocks %}
+        <div class="m-gallery-item-{{ section.id }}" {{ block.shopify_attributes }}>
+         
+          {% if block.settings.image != blank %}
+            {%- assign img_class = 'm-gallery-image-' | append: section.id -%}
+            {{ block.settings.image | image_url: width: 1200 | image_tag:
+              class: img_class,
+              loading: 'lazy',
+              alt: block.settings.image.alt | escape
+            }}
+          {% else %}
+            {%- assign placeholder_class = 'm-gallery-image-' | append: section.id -%}
+            {{ 'image' | placeholder_svg_tag: placeholder_class }}
+          {% endif %}
+
+
+          {% if block.settings.link != blank or block.settings.title != blank %}
+            <a href="{{ block.settings.link | default: '#' }}" class="m-gallery-overlay-{{ section.id }}">
+              <div class="m-gallery-content">
+                {% if section.settings.show_icon %}
+                   <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                {% endif %}
+                {% if block.settings.title != blank %}
+                  <h3 class="m-gallery-title-{{ section.id }}">{{ block.settings.title }}</h3>
+                {% endif %}
+              </div>
+            </a>
+          {% endif %}
+         
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Full Custom Gallery",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Our Gallery"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "default": "h2",
+      "options": [
+        {"value": "h1", "label": "Extra Large"},
+        {"value": "h2", "label": "Large"},
+        {"value": "h3", "label": "Medium"}
+      ]
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "default": "center",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Grid Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Images per row (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Images per row (Mobile)",
+      "default": "2",
+      "options": [
+        {"value": "1", "label": "1 Column"},
+        {"value": "2", "label": "2 Columns"}
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image Ratio",
+      "default": "square",
+      "options": [
+        {"value": "square", "label": "Square (1:1)"},
+        {"value": "portrait", "label": "Portrait (2:3)"},
+        {"value": "adapt", "label": "Original Ratio"}
+      ]
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between cards",
+      "min": 0,
+      "max": 60,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Corner Roundness",
+      "min": 0,
+      "max": 100,
+      "default": 10,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Overlay & Style"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "transparent"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Hover Overlay Opacity",
+      "min": 0,
+      "max": 90,
+      "default": 40,
+      "unit": "%"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Show Icon on Hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Gallery Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Select Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title (Show on hover)",
+          "default": "Image Title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full Custom Gallery",
+      "blocks": [
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"}
+      ]
+    }
+  ]
+}
+{% endschema %}
